@@ -25,7 +25,7 @@ def tblrec(img_path, save_folder= './output', lang='en'):
     formatted_datetime = current_datetime.strftime("%Y_%m_%d_%H%M%S")
     save_structure_res(result, save_folder, os.path.basename(formatted_datetime))
 
-    print('saved at:', save_folder+formatted_datetime)
+    print('Saved at:', save_folder+formatted_datetime)
     
     # Directory where Excel files are stored
     directory = save_folder+'/'+formatted_datetime
@@ -40,20 +40,20 @@ def tblrec(img_path, save_folder= './output', lang='en'):
         # Get the first .xlsx file
         first_xlsx_file = os.path.join(directory, xlsx_files[0])
         
-        # Convert Excel to JSON
-        json_data = excel_to_json(first_xlsx_file)
+        # Convert Excel to JSON (we might need it in the future)
+        # json_data = excel_to_json(first_xlsx_file)
         
         # Rename Excel file to 'extracted.xlsx'
-        # new_xlsx_file = os.path.join(directory, 'extracted.xlsx')
-        # os.rename(first_xlsx_file, new_xlsx_file)
+        new_xlsx_file = os.path.join(directory, 'extracted.xlsx')
+        os.rename(first_xlsx_file, new_xlsx_file)
     
-        # Write JSON data to a file
-        json_output_file = os.path.splitext(first_xlsx_file)[0] + '.json'
-        with open(json_output_file, 'w') as json_file:
-            json_file.write(json_data)
+        # Write JSON data to a file (we might need it in the future)
+        # json_output_file = os.path.splitext(first_xlsx_file)[0] + '.json'
+        # with open(json_output_file, 'w') as json_file:
+        #     json_file.write(json_data)
         
-        print(f"Excel file '{first_xlsx_file}' converted to JSON: '{json_output_file}'")
-        return first_xlsx_file 
+        print(f"Excel file '{first_xlsx_file}' renamed to : '{new_xlsx_file}'")
+        return new_xlsx_file 
     else:
         print("No .xlsx files found in the directory.")
         return {'error': 'Error in extraction!'}
