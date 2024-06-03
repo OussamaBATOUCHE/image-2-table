@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify, send_file
 from werkzeug.utils import secure_filename
 import pandas as pd
-from fncts import tblrec
+from fncts import tblrec, tblrec_gpt
 
 app = Flask(__name__)
 
@@ -45,13 +45,14 @@ def tblrec_api():
         
         if file_type == 'xlsx':
             file.save(f"{app.config['UPLOAD_FOLDER']}/{filename}")
-            extracted_file_path = tblrec(f"{app.config['UPLOAD_FOLDER']}/{filename}", lang=file_lang, mode=file_mode)
+            extracted_file_path = tblrec_gpt(f"{app.config['UPLOAD_FOLDER']}/{filename}", lang=file_lang, mode=file_mode)
             return send_file(extracted_file_path, as_attachment=True, mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
             # return result
         
         elif file_type == 'html':
             file.save(f"{app.config['UPLOAD_FOLDER']}/{filename}")
-            html_file = tblrec(f"{app.config['UPLOAD_FOLDER']}/{filename}", lang=file_lang, mode=file_mode)
+            res = tblrec_gpt(f"{app.config['UPLOAD_FOLDER']}/{filename}", lang=file_lang, mode=file_mode)
+            html_file = res['table']
             return jsonify(html_file), 200
         
         # Not Supported yet !!!
@@ -69,4 +70,4 @@ def tblrec_api():
     return jsonify({'error': 'File type not allowed'}), 400
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True)
+    app.run(host='0.0.0.0', debug=True, port=5001)

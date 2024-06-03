@@ -1,13 +1,28 @@
 import os
 import cv2
-from paddleocr import PPStructure,draw_structure_result,save_structure_res
-from paddleocr.ppstructure.recovery.recovery_to_doc import sorted_layout_boxes, convert_info_docx
+# from paddleocr import PPStructure,draw_structure_result,save_structure_res
+# from paddleocr.ppstructure.recovery.recovery_to_doc import sorted_layout_boxes, convert_info_docx
 from datetime import datetime
+
+#----------------------------- For GPT version
+from openai import OpenAI
+import os 
 import json
-import pandas as pd
+import base64
+import requests
+
+APIKEY=os.environ.get("OPENAI_API_KEY")
+
+# Function to encode the image
+def encode_image(image_path):
+  with open(image_path, "rb") as image_file:
+    return base64.b64encode(image_file.read()).decode('utf-8')
+  
+#----------------------------- END For GPT version
 
 # Function to convert Excel file to JSON
 def excel_to_json(excel_file_path):
+    import pandas as pd
     # Read Excel file
     df = pd.read_excel(excel_file_path)
     
@@ -78,6 +93,76 @@ def tblrec(img_path, save_folder= './output', lang='en', mode='consume'):
             print("No .xlsx files found in the directory.")
             return {'error': 'Error in extraction!'}
 
-
-
 # print(tblrec('data/tbl2.jpg'))
+
+################### GPT version
+def tblrec_gpt(img_path, save_folder= './output', lang='en', mode='consume'):
+    
+    # Path to your image
+    image_path = img_path
+
+    # Getting the base64 string
+    base64_image = encode_image(image_path)
+
+    headers = {
+        "Authorization": f"Bearer {APIKEY.strip()}",
+        "Content-Type": "application/json"
+    }
+
+    payload = {
+    "model": "gpt-4o",
+    "messages": [
+        {
+        "role": "user",
+        "content": [
+            {
+            "type": "text",
+            "text": "From this figure, return a JSON that contains: 1) Table in this figure as an HTML (use thead, tbody and tfoot), 2) Title for the content (in french). IMPORTANT: do not add any other text, only the JSON is requested, starting with {"
+            },
+            {
+            "type": "image_url",
+            "image_url": {
+                "url": f"data:image/jpeg;base64,{base64_image}"
+            }
+            }
+        ]
+        }
+    ],
+    "max_tokens": 800
+    }
+
+    # Send the request
+    response = requests.post("https://api.openai.com/v1/chat/completions", headers=headers, json=payload)
+    res = response.json()
+    content = res['choices'][0]['message']['content']
+
+    # Saving folder
+    current_datetime = datetime.now()
+    formatted_datetime = current_datetime.strftime("%Y_%m_%d_%H%M%S")
+    directory = save_folder+'/'+formatted_datetime
+
+    data = {}
+    # Parse the JSON content to ensure it is valid
+    try:
+        data = json.loads(content)
+        base_name = os.path.basename(img_path)
+        name, _ = os.path.splitext(base_name)
+        scanid = name
+        data['scanid'] = name
+        data['savedat'] = directory
+
+        # Ensure the directory exists
+        os.makedirs(directory, exist_ok=True)
+
+        # Save the parsed JSON content to a file
+        with open(directory+'/'+scanid+'.json', 'w') as json_file:
+            json.dump(data, json_file, indent=4, ensure_ascii=False)
+        
+        print("JSON content saved to "+directory+'/'+scanid+".json")
+    except json.JSONDecodeError as e:
+        print(f"Failed to parse JSON: {e}")
+
+    return data 
+        
+
+# print(tblrec_gpt('data/tbl2.jpg'))

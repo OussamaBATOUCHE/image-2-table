@@ -1,0 +1,6 @@
+{
+    "title": "Résultats de suivi pour différentes séquences",
+    "table": "<table>\n  <thead>\n    <tr>\n      <th>Sequence</th>\n      <th>Frames</th>\n      <th>Tracking without distance cue P/R/F</th>\n      <th>Tracking with distance cue P/R/F</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <td>UAV1</td>\n      <td>616</td>\n      <td>0.90/0.90/0.90</td>\n      <td>0.94/0.94/0.94</td>\n    </tr>\n    <tr>\n      <td>UAV 2</td>\n      <td>1833</td>\n      <td>0.92/0.88/0.90</td>\n      <td>0.96/0.99/0.97</td>\n    </tr>\n    <tr>\n      <td>Traffic 1</td>\n      <td>156</td>\n      <td>0.88/0.91/0.89</td>\n      <td>0.96/0.98/0.97</td>\n    </tr>\n    <tr>\n      <td>Traffic 2</td>\n      <td>227</td>\n      <td>0.85/0.90/0.87</td>\n      <td>0.97/0.97/0.97</td>\n    </tr>\n    <tr>\n      <td>Pedestrian 2</td>\n      <td>338</td>\n      <td>0.93/0.95/0.94</td>\n      <td>1.00/1.00/1.00</td>\n    </tr>\n  </tbody>\n</table>",
+    "scanid": "2",
+    "savedat": "./output/2024_06_03_103653"
+}

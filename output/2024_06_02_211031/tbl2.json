@@ -1,0 +1,6 @@
+{
+    "table": "<table><tr><th>Soumissionaire</th><th>N° / NIF</th><th>Note Obtenue</th><th>Délais (Mois)</th><th>Montant Offre Financière (DA/HT)</th><th>Observations</th></tr><tr><td>SARL BERMI</td><td>000042052503520000</td><td>85,36</td><td>04</td><td>322 989 840,00</td><td>Meilleure Offre Technico-commerciale</td></tr></table>",
+    "title": "Résultat de l'appel d'offres",
+    "scanid": "tbl2",
+    "savedat": "./output/2024_06_02_211031"
+}
