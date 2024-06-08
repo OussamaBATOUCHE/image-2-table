@@ -3,6 +3,7 @@ import cv2
 # from paddleocr import PPStructure,draw_structure_result,save_structure_res
 # from paddleocr.ppstructure.recovery.recovery_to_doc import sorted_layout_boxes, convert_info_docx
 from datetime import datetime
+import re
 
 #----------------------------- For GPT version
 from openai import OpenAI
@@ -96,7 +97,7 @@ def tblrec(img_path, save_folder= './output', lang='en', mode='consume'):
 # print(tblrec('data/tbl2.jpg'))
 
 ################### GPT version
-def tblrec_gpt(img_path, save_folder= './output', lang='en', mode='consume'):
+def tblrec_gpt(img_path, save_folder= './output', lang='en', mode='consume', scan_id='undefined'):
     
     # Path to your image
     image_path = img_path
@@ -117,7 +118,7 @@ def tblrec_gpt(img_path, save_folder= './output', lang='en', mode='consume'):
         "content": [
             {
             "type": "text",
-            "text": "From this figure, return a JSON that contains: 1) Table in this figure as an HTML (use thead, tbody and tfoot), 2) Title for the content (in french). IMPORTANT: do not add any other text, only the JSON is requested, starting with {"
+            "text": "From this figure, return a JSON that contains: 1) The HTML version of the whole content, 2) Title for the content (in french) 3) Sector of activity, choose from [pharma, buildings, other]. IMPORTANT: do not add any other text, only the JSON is requested, starting with {"
             },
             {
             "type": "image_url",
@@ -128,13 +129,15 @@ def tblrec_gpt(img_path, save_folder= './output', lang='en', mode='consume'):
         ]
         }
     ],
-    "max_tokens": 800
+    # "max_tokens": 800
     }
 
     # Send the request
     response = requests.post("https://api.openai.com/v1/chat/completions", headers=headers, json=payload)
     res = response.json()
     content = res['choices'][0]['message']['content']
+    content = re.sub(r'^```json\s*|\s*```$', '', content).strip()
+    # print(content)
 
     # Saving folder
     current_datetime = datetime.now()
@@ -147,22 +150,21 @@ def tblrec_gpt(img_path, save_folder= './output', lang='en', mode='consume'):
         data = json.loads(content)
         base_name = os.path.basename(img_path)
         name, _ = os.path.splitext(base_name)
-        scanid = name
-        data['scanid'] = name
+        data['scan_id'] = scan_id
         data['savedat'] = directory
 
         # Ensure the directory exists
         os.makedirs(directory, exist_ok=True)
 
         # Save the parsed JSON content to a file
-        with open(directory+'/'+scanid+'.json', 'w') as json_file:
+        with open(directory+'/'+scan_id+'.json', 'w') as json_file:
             json.dump(data, json_file, indent=4, ensure_ascii=False)
         
-        print("JSON content saved to "+directory+'/'+scanid+".json")
+        print("JSON content saved to "+directory+'/'+scan_id+".json")
     except json.JSONDecodeError as e:
         print(f"Failed to parse JSON: {e}")
 
     return data 
         
 
-# print(tblrec_gpt('data/tbl2.jpg'))
+# print(tblrec_gpt('uploads/s1.jpeg'))

@@ -69,5 +69,28 @@ def tblrec_api():
 
     return jsonify({'error': 'File type not allowed'}), 400
 
+
+@app.route('/api/i2dv', methods=['POST'])
+def i2dv_api():
+    if 'scan_file' not in request.files or 'scan_id' not in request.form:
+        return jsonify({'error': 'Missing SCAN file or SCAN ID parameters'}), 400
+
+    file = request.files['scan_file']
+    scan_id = request.form['scan_id']
+
+    if file.filename == '':
+        return jsonify({'error': 'No selected file'}), 400
+    if scan_id == '':
+        return jsonify({'error': 'Scan Id is required'}), 400
+
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        file.save(f"{app.config['UPLOAD_FOLDER']}/{filename}")
+        res = tblrec_gpt(f"{app.config['UPLOAD_FOLDER']}/{filename}", scan_id=scan_id)
+        return jsonify(res), 200
+
+    return jsonify({'error': 'File type not allowed'}), 400
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True, port=5001)

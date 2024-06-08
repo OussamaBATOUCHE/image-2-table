@@ -1,0 +1,3 @@
+{
+    "v1" : {"text": "From this figure, return a JSON that contains: 1) Table in this figure as an HTML (use thead, tbody and tfoot), 2) Title for the content (in french). IMPORTANT: do not add any other text, only the JSON is requested, starting with {"}
+}
