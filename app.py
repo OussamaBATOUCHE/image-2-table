@@ -69,9 +69,8 @@ def tblrec_api():
 
     return jsonify({'error': 'File type not allowed'}), 400
 
-
-@app.route('/api/i2dv', methods=['POST'])
-def i2dv_api():
+@app.route('/api/s2dv', methods=['POST'])
+def s2dv_api():
     if 'scan_file' not in request.files or 'scan_id' not in request.form:
         return jsonify({'error': 'Missing SCAN file or SCAN ID parameters'}), 400
 
@@ -90,6 +89,10 @@ def i2dv_api():
         return jsonify(res), 200
 
     return jsonify({'error': 'File type not allowed'}), 400
+
+@app.route('/')
+def check():
+    return 'It Works!'
 
 
 if __name__ == '__main__':
