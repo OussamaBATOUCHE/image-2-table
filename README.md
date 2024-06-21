@@ -13,10 +13,13 @@ Once logged in into the server, follow these steps:
    > python3 app.py
 ```
 
-Now you can POST call the API via : ```http://localhost:5001/api/s2dv``` and include the following variables:
+To test if the API works, you can GET request ```http://localhost:5001/```.
 
-```scan_id``` :  This is the unique ID (string) for the scanned document, it will be included in the response in a JSON format.</li>
-```sh scan_file```: your scanned file in pdf, jpg, or jpeg.
+Now you can POST call the API via ```http://localhost:5001/api/s2dv``` and include the following variables:
+
+- ```scan_id``` :  This is the unique ID (string) for the scanned document, it will be included in the response in a JSON format.
+- ```scan_file```: your scanned file in pdf, jpg, or jpeg.
+- ```tkn```: your request token.
 
 
 As a response, you will receive a JSON in the following architecture:
@@ -29,6 +32,11 @@ As a response, you will receive a JSON in the following architecture:
       "title": "your title here"
    }
 ```
+
+If you want to retrieve previous digital version, you can POST call the API via ```http://localhost:5001/api/retrieve``` and include the following variables:
+
+- ```savedat```: the same as returned in the repose JSON file.
+- ```tkn```: your request token.
 
 And Voila!
 
