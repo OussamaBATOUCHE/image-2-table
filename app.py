@@ -1,6 +1,7 @@
-from flask import Flask, request, jsonify, send_file
+from flask import Flask, request, jsonify, send_file, abort
 from werkzeug.utils import secure_filename
 import pandas as pd
+import json
 from fncts import tblrec, tblrec_gpt
 
 app = Flask(__name__)
@@ -9,6 +10,7 @@ UPLOAD_FOLDER = 'uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 ALLOWED_LANGUAGES = {'en'}
 ALLOWED_MODES = {'consume','api'}
+LIST_TKNS = ['9a4ZtG7iWQ','J7m3K2bYwR','f8Hn2Q9x6M','X9pL5k3vD4','z6Yc8T7wJ1','R2q3F9mL5N','P7d4W1x2j8','t6B9y4H3qR','M3v8K7j2Yx','G5n4Q2p9Zk','F8b1W7y3Lq']
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
@@ -70,7 +72,7 @@ def tblrec_api():
     return jsonify({'error': 'File type not allowed'}), 400
 
 @app.route('/api/s2dv', methods=['POST'])
-def s2dv_api():
+def s2dv_process():
     if 'scan_file' not in request.files or 'scan_id' not in request.form:
         return jsonify({'error': 'Missing SCAN file or SCAN ID parameters'}), 400
 
@@ -90,9 +92,45 @@ def s2dv_api():
 
     return jsonify({'error': 'File type not allowed'}), 400
 
+
+def verify_token(token):
+    # Example token verification logic
+    return token in LIST_TKNS
+
+@app.route('/api/retrieve', methods=['GET'])
+def s2dv_retrieve():
+    savedat = request.args.get('savedat')
+    token = request.args.get('token')
+
+    if not verify_token(token):
+        abort(403, description="Forbidden: Invalid token")
+    
+    file_folder_path = os.path.join()
+
+    # Check if the directory exists
+    if not os.path.exists(file_folder_path):
+        abort(404, description="Directory not found")
+
+    # Get the first .json file in the directory
+    json_files = [f for f in os.listdir(file_folder_path) if f.endswith('.json')]
+    if not json_files:
+        abort(404, description="No JSON files found in the directory")
+
+    first_json_file = json_files[0]
+    file_path = os.path.join(file_folder_path, first_json_file)
+
+    # Read the file content and return it as JSON
+    try:
+        with open(file_path, 'r') as file:
+            data = json.load(file)
+        return jsonify(data)
+    except Exception as e:
+        abort(500, description=f"Error reading file: {str(e)}")
+
+
 @app.route('/')
 def check():
-    return 'It Works!'
+    return 'Welcome to Scan.2.Digital.version program!'
 
 
 if __name__ == '__main__':
