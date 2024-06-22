@@ -11,12 +11,13 @@ UPLOAD_FOLDER = 'uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 ALLOWED_LANGUAGES = {'en'}
 ALLOWED_MODES = {'consume','api'}
-LIST_TKNS = {'9a4ZtG7iWQ','J7m3K2bYwR','f8Hn2Q9x6M','X9pL5k3vD4','z6Yc8T7wJ1','R2q3F9mL5N','P7d4W1x2j8','t6B9y4H3qR','M3v8K7j2Yx','G5n4Q2p9Zk','F8b1W7y3Lq'}
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 def verify_token(token):
-    return token in LIST_TKNS
+    with open('../../../Vars_store/at_tkns.json', 'r') as file:
+        list_of = json.load(file)
+        return token in list_of['tkns']
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -77,8 +78,8 @@ def tblrec_api():
 
 @app.route('/api/s2dv', methods=['POST'])
 def s2dv_process():
-    if 'scan_file' not in request.files or 'scan_id' not in request.formor or 'tkn' not in request.form:
-        return jsonify({'error': 'Missing SCAN file or SCAN ID parameters'}), 400
+    if 'scan_file' not in request.files or 'scan_id' not in request.form or 'tkn' not in request.form:
+        return jsonify({'error': 'Missing parameter!'}), 400
 
     file = request.files['scan_file']
     scan_id = request.form['scan_id']

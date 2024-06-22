@@ -1,5 +1,5 @@
 import os
-import cv2
+# import cv2
 # from paddleocr import PPStructure,draw_structure_result,save_structure_res
 # from paddleocr.ppstructure.recovery.recovery_to_doc import sorted_layout_boxes, convert_info_docx
 from datetime import datetime
@@ -14,6 +14,12 @@ import requests
 
 APIKEY=os.environ.get("OPENAI_API_KEY")
 
+# Function to read prompt
+def get_prompt(id):
+    with open('../../../Vars_store/at_prompts.json', 'r') as file:
+        prompt_version = json.load(file)
+        return prompt_version[id]["text"]
+    
 # Function to encode the image
 def encode_image(image_path):
   with open(image_path, "rb") as image_file:
@@ -118,7 +124,7 @@ def tblrec_gpt(img_path, save_folder= './output', lang='en', mode='consume', sca
         "content": [
             {
             "type": "text",
-            "text": "From this figure, return a JSON that contains: 1) The HTML version of the whole content, 2) Title for the content (in french) 3) Sector of activity, choose from [pharma, buildings, other]. IMPORTANT: do not add any other text, only the JSON is requested, starting with {"
+            "text": get_prompt("v3")
             },
             {
             "type": "image_url",
@@ -165,6 +171,5 @@ def tblrec_gpt(img_path, save_folder= './output', lang='en', mode='consume', sca
         print(f"Failed to parse JSON: {e}")
 
     return data 
-        
 
-# print(tblrec_gpt('uploads/s1.jpeg'))
+
