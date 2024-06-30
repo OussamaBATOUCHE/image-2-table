@@ -1,6 +1,0 @@
-{
-    "title": "Candidature soumise pour l'appel d'offres",
-    "table": "<table> <thead> <tr> <th>Soumissionnaire</th> <th>N° / NIF</th> <th>Note Obtenue</th> <th>Délaîs (Mois)</th> <th>Montant Offre Financière (DA/HT)</th> <th>Observations</th> </tr> </thead> <tbody> <tr> <td>SARL BERMI</td> <td>0000420525035200000</td> <td>85,36</td> <td>04</td> <td>322 989 840,00</td> <td>Meilleure Offre Techno-commerciale</td> </tr> </tbody> </table>",
-    "scanid": "tbl2",
-    "savedat": "./output/2024_06_03_103601"
-}

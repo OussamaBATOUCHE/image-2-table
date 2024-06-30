@@ -1,6 +1,0 @@
-{
-    "title": "Avis d'attribution provisoire de marché",
-    "table": "<table>\n<thead>\n<tr>\n<th>Attribution provisoire</th>\n<th>Désignation du lot</th>\n<th>Note technique</th>\n<th>Montant par lot en DA/TTC</th>\n<th>Montant du marché en DA/TTC</th>\n<th>Délai de livraison</th>\n<th>Observation</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>ETS ABDESAMED FATMA<br>NIF: 271090100384194</td>\n<td>Lot 01 : TENUES ET COMBINAISONS</td>\n<td>50</td>\n<td>15 284 360,00</td>\n<td rowspan=\"2\">20 708 380,00</td>\n<td rowspan=\"2\">25 jours</td>\n<td>Une seule offre pré qualifiée techniquement</td>\n</tr>\n<tr>\n<td></td>\n<td>Lot 02 : TABLIERS ET BLOUSES</td>\n<td>50</td>\n<td>5 424 020,00</td>\n<td></td>\n<td></td>\n<td> </td>\n</tr>\n<tr>\n<td>ETS OTHMANE FATMA<br>NIF: 2551411000201880000</td>\n<td>Lot 03 : CHAUSSURES ET RANGERS</td>\n<td>50</td>\n<td>2 433 550,00</td>\n<td>2 433 550,00</td>\n<td>20 jours</td>\n<td>Une seule offre pré qualifiée techniquement</td>\n</tr>\n<tr>\n<td>SARL TM TAX<br>NIF: 0001320002727962</td>\n<td>Lot 04 : LITERIE</td>\n<td>50</td>\n<td>297 500,00</td>\n<td>297 500,00</td>\n<td>10 jours</td>\n<td>Une seule offre pré qualifiée techniquement</td>\n</tr>\n</tbody>\n<tfoot>\n</tfoot>\n</table>",
-    "scanid": "s1",
-    "savedat": "./output/2024_06_04_112110"
-}

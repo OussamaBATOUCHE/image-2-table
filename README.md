@@ -25,17 +25,33 @@ Now you can POST call the API via ```http://localhost:5001/api/s2dv``` and inclu
 As a response, you will receive a JSON in the following architecture:
 ```json
    {
-      "html_content": "<html><body><h1>Title here</h1><p>paragraph here</p></body></html>",
-      "savedat": "./file/data_here",
-      "scan_id": "scan_id_x",
-      "sector": "Pharma",
-      "title": "your title here"
+      "created": "2024_05_02_144912",
+      "savedat": "path/to/folder/here",
+      "scan_html": "<html><body><h1>Title here</h1><p>paragraph here</p></body></html>",
+      "scan_id": "1234",
+      "scan_sectors": [
+         "s1",
+         "s2",
+         "s3",
+         "s4",
+         "s5"
+      ],
+      "scan_titles": [
+         "proposed_title_1",
+         "proposed_title_2",
+         "proposed_title_3"
+      ]
    }
 ```
 
-If you want to retrieve previous digital version, you can POST call the API via ```http://localhost:5001/api/retrieve``` and include the following variables:
+To rename the scan id, you can POST call the API via ```http://localhost:5001/api/rename_sif``` and include the following variables:
+- ```scan_id```: the old scan ID (the same one you mentioned in your POST request), this one cannot be used anymore.
+- ```scan_id_new```: the new scan ID to be used now onwards.
+- ```tkn```: your request token.
 
-- ```savedat```: the same as returned in the repose JSON file.
+
+If you want to retrieve previous digital versions, you can POST call the API via ```http://localhost:5001/api/retrieve``` and include the following variables:
+- ```scan_id```: the same as returned in the repose JSON file (you have to use the recent one).
 - ```tkn```: your request token.
 
 And Voila!

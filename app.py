@@ -3,7 +3,8 @@ from werkzeug.utils import secure_filename
 import pandas as pd
 import os
 import json
-from fncts import tblrec, tblrec_gpt
+from datetime import datetime
+from fncts import tblrec, tblrec_gpt, find_folder_ending_with
 
 app = Flask(__name__)
 
@@ -103,20 +104,26 @@ def s2dv_process():
 
 @app.route('/api/retrieve', methods=['POST'])
 def s2dv_retrieve():
-    savedat = request.form['savedat']
+    if 'scan_id' not in request.form  or 'tkn' not in request.form:
+        return jsonify({'error': 'Missing parameter!'}), 400
+    scan_id = request.form['scan_id']
     token = request.form['tkn']
 
     if not verify_token(token):
         abort(403, description="Forbidden: Invalid token")
     
-    file_folder_path = os.path.join(savedat)
+
+    file_folder_path = find_folder_ending_with(scan_id)
+    if not file_folder_path:
+        abort(404, description="Folder not found")
+    # file_folder_path = os.path.join('./output/d_'+scan_id)
 
     # Check if the directory exists
     if not os.path.exists(file_folder_path):
         abort(404, description="Directory not found")
 
     # Get the first .json file in the directory
-    json_files = [f for f in os.listdir(file_folder_path) if f.endswith('.json')]
+    json_files = [f for f in os.listdir(file_folder_path) if f.endswith(scan_id+'.json')]
     if not json_files:
         abort(404, description="No JSON files found in the directory")
 
@@ -130,6 +137,52 @@ def s2dv_retrieve():
         return jsonify(data)
     except Exception as e:
         abort(500, description=f"Error reading file: {str(e)}")
+
+@app.route('/api/rename_sif', methods=['POST'])
+def s2dv_rename_sif():
+    if 'scan_id' not in request.form or 'scan_id_new' not in request.form  or 'tkn' not in request.form:
+        return jsonify({'error': 'Missing parameter!'}), 400
+    
+    scan_id = request.form['scan_id']
+    scan_id_new = request.form['scan_id_new']
+    token = request.form['tkn']
+
+    if not verify_token(token):
+        abort(403, description="Forbidden: Invalid token")
+    
+    file_folder_path = find_folder_ending_with(scan_id)
+    if not file_folder_path:
+        abort(404, description="Folder not found")
+    else:
+        if file_folder_path.count('_') == 2:
+            abort(404, description="Folder already renamed!")
+        else:
+            
+            # Get the first .json file in the directory
+            json_files = [f for f in os.listdir(file_folder_path) if f.endswith('.json')]
+            if not json_files:
+                abort(404, description="No JSON files found in the directory")
+
+            first_json_file = json_files[0]
+            file_path = os.path.join(file_folder_path, first_json_file)
+
+            # Read the file content and update it
+            current_datetime = datetime.now()
+            formatted_datetime = current_datetime.strftime("%Y_%m_%d_%H%M%S")
+            with open(file_path, 'r') as file:
+                data = json.load(file)
+                data['update'] =formatted_datetime
+                data['scan_id_old'] = data['scan_id']
+                data['scan_id'] = scan_id_new
+                data['savedat'] = file_folder_path+"_"+scan_id_new
+                with open(file_folder_path+'/'+scan_id_new+'.json', 'w') as json_file:
+                    json.dump(data, json_file, indent=4, ensure_ascii=False)
+
+            # rename it
+            os.rename(file_folder_path, file_folder_path+"_"+scan_id_new)
+            # update the json file
+            return jsonify(message="The folder was successfully renamed!")
+
 
 @app.route('/')
 def check():

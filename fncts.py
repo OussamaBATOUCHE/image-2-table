@@ -146,9 +146,7 @@ def tblrec_gpt(img_path, save_folder= './output', lang='en', mode='consume', sca
     # print(content)
 
     # Saving folder
-    current_datetime = datetime.now()
-    formatted_datetime = current_datetime.strftime("%Y_%m_%d_%H%M%S")
-    directory = save_folder+'/'+formatted_datetime
+    directory = save_folder+'/d_'+scan_id
 
     data = {}
     # Parse the JSON content to ensure it is valid
@@ -158,6 +156,10 @@ def tblrec_gpt(img_path, save_folder= './output', lang='en', mode='consume', sca
         name, _ = os.path.splitext(base_name)
         data['scan_id'] = scan_id
         data['savedat'] = directory
+
+        current_datetime = datetime.now()
+        formatted_datetime = current_datetime.strftime("%Y_%m_%d_%H%M%S")
+        data['created'] = formatted_datetime
 
         # Ensure the directory exists
         os.makedirs(directory, exist_ok=True)
@@ -173,3 +175,9 @@ def tblrec_gpt(img_path, save_folder= './output', lang='en', mode='consume', sca
     return data 
 
 
+def find_folder_ending_with(scan_id):
+    for root, dirs, files in os.walk('./output'):
+        for dir_name in dirs:
+            if dir_name.endswith(scan_id):
+                return os.path.join(root, dir_name)
+    return None

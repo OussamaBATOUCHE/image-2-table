@@ -1,6 +1,0 @@
-{
-    "table": "<table border='1'><tr><th>Soumissionnaire</th><th>N° / NIF</th><th>Note Obtenue</th><th>Délais (Mois)</th><th>Montant Offre Financière (DA/HT)</th><th>Observations</th></tr><tr><td>SARL BERMI</td><td>00004205252035200000</td><td>85,36</td><td>04</td><td>322 989 840,00</td><td>Meilleure Offre Technico-commerciale</td></tr></table>",
-    "title": "Résultats de l'évaluation des offres",
-    "scanid": "tbl2",
-    "savedat": "./output/2024_06_02_213900"
-}
